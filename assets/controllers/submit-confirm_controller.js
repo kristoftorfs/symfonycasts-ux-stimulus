@@ -1,4 +1,5 @@
 import { Controller } from "stimulus";
+import { useDispatch } from "stimulus-use";
 import Swal from "sweetalert2";
 
 export default class extends Controller {
@@ -9,6 +10,10 @@ export default class extends Controller {
         confirmButtonText: String,
         submitAsync: Boolean
     };
+
+    connect() {
+        useDispatch(this, { debug: true });
+    }
 
     onSubmit(event) {
         event.preventDefault();
@@ -26,15 +31,19 @@ export default class extends Controller {
         })
     }
 
-    submitForm() {
+    async submitForm() {
         if (!this.submitAsyncValue) {
             this.element.submit();
             return;
         }
 
-        return fetch(this.element.action, {
+        const response = await fetch(this.element.action, {
             method: this.element.method,
             body: new FormData(this.element)
         })
+
+        this.dispatch('async:submitted', {
+            response
+        });
     }
 }
