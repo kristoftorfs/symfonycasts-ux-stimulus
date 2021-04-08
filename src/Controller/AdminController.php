@@ -15,17 +15,28 @@ class AdminController extends AbstractController
     public function dashboard(ChartBuilderInterface $chartBuilder)
     {
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
-        $chart->setData([
-            'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            'datasets' => [
-                [
-                    'label' => 'My First dataset',
-                    'backgroundColor' => 'rgb(255, 99, 132)',
-                    'borderColor' => 'rgb(255, 99, 132)',
-                    'data' => [0, 10, 5, 2, 20, 30, 45],
+        $chart
+            ->setData([
+                'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                'datasets' => [
+                    [
+                        'label' => 'My First dataset',
+                        'backgroundColor' => 'rgb(255, 99, 132)',
+                        'borderColor' => 'rgb(255, 99, 132)',
+                        'data' => [0, 10, 5, 2, 20, 30, 45],
+                    ],
                 ],
-            ],
-        ]);
+            ])
+            ->setOptions([
+                'scales' => [
+                    'yAxes' => [[
+                        'ticks' => [
+                            'beginAtZero' => false
+                        ]
+                    ]]
+                ]
+            ])
+        ;
 
         return $this->render('admin/dashboard.html.twig', [
             'chart' => $chart
